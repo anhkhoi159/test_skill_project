@@ -150,7 +150,11 @@ class _LoginPageState extends State<LoginPage> {
 
 clickDemo() {
   print("OK clickkk");
-  getAccessToken();
+  final startTime = DateTime(2018, 6, 23, 12, 58);
+  final endTime = DateTime(2018, 6, 23, 13, 00);
+  print("ssss time "+endTime.difference(startTime).inHours.toString());
+
+  // getAccessToken();
 }
 
 Future<String> getAccessToken() async {
@@ -161,7 +165,7 @@ Future<String> getAccessToken() async {
     HttpHeaders.authorizationHeader:
         "Basic dGhpZW50cTNfbmV3QGZwdC5jb20udm46MTIzNDU2"
   });
-  String basicAuth = response.body.toString().replaceAll("\"","");
+  String basicAuth = response.body.toString().replaceAll("\"", "");
   postLoginToken(basicAuth);
   return "";
 }
@@ -178,14 +182,37 @@ Future<LoginData> postLoginToken(String basicAuth) async {
   var url =
       Uri.https("sapi.fpt.vn", "/su2-wsmobinetautostag/MobiNet_Login/POST");
 
-      var responsePost = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer '+basicAuth,
-        },
+  var responsePost = await http.post(url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + basicAuth,
+      },
       body: jsonEncode(params));
+  if (responsePost.statusCode == 200) {
+    Map<String, dynamic> userMap = jsonDecode(responsePost.body);
+    var loginData = LoginData.fromJson(userMap);
+    print("dataaa22222 " + responsePost.statusCode.toString());
+    print("dataaa22222 " + responsePost.body);
+    print("dataaa22222 " + loginData.message.accessToken.toString());
+    print("dataaa22222 " + loginData.message.result.userName.toString());
+  }
 
-  print("dataaa22222 " + responsePost.statusCode.toString());
-  // print("dataaa22222 " + response.);
+
   return null;
+}
+
+Future<http.Response> postDataDetail(
+    String basicAuth, String baererAuth, String FuntiongetData) async {
+  var params = {"Type": 0, "UserName": FuntiongetData};
+
+  var url = Uri.https(
+      "sapi.fpt.vn", "su2-wsmobinetautostag/MobiNet_GetListDepMain/POST");
+
+  var responsePost = await http.post(url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + basicAuth,
+        'AuthorizationX': 'bearer ' + baererAuth,
+      },
+      body: jsonEncode(params));
 }
