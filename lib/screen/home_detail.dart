@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+
+typedef void BooleanCallback();
+
 class HomeDetail extends StatefulWidget {
-  const HomeDetail({Key key}) : super(key: key);
+  const HomeDetail({Key key, this.gotoDetailDeployment}) : super(key: key);
+  final BooleanCallback gotoDetailDeployment;
 
   @override
   _HomeDetailState createState() => _HomeDetailState();
@@ -17,7 +21,9 @@ class _HomeDetailState extends State<HomeDetail> {
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            Image.network(coverImageUrl),
+            Image(
+              image: AssetImage('assets/cover_image.jpg'),
+            ),
             Column(
               children: <Widget>[
                 Row(
@@ -26,43 +32,64 @@ class _HomeDetailState extends State<HomeDetail> {
                   children: <Widget>[
                     Expanded(
                       flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 50, 10, 5),
-                        alignment: AlignmentDirectional.center,
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            border: Border(
-                              top: BorderSide(color: Colors.white, width: 2),
-                              left: BorderSide(color: Colors.white, width: 2),
-                            )),
+                      child: GestureDetector(
+                        onTap: widget.gotoDetailDeployment,
                         child: Stack(
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Container(
-                                  padding:EdgeInsets.only(bottom: 30),
-                                  child: Icon(
-                                    Icons.settings,
-                                    color: Colors.white,
-                                    size: 50,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 50, 10, 5),
+                              alignment: AlignmentDirectional.center,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border(
+                                    top: BorderSide(color: Colors.white, width: 2),
+                                    left: BorderSide(color: Colors.white, width: 2),
+                                  )),
+                              child: Stack(
+                                children: <Widget>[
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      Container(
+                                        padding:EdgeInsets.only(bottom: 30),
+                                        child: Icon(
+                                          Icons.settings,
+                                          color: Colors.white,
+                                          size: 50,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Triển khai",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "bảo trì",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:  EdgeInsets.only(top: 5,left: 3),
+                              child: Container(
+                                  padding: EdgeInsets.fromLTRB(2,5,2,5),
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                                      border: Border.all(width: 1.3, color: Colors.white),
                                   ),
-                                ),
-                                Text(
-                                  "Triển khai",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "bảo trì",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                                  child: Text("5",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ))),
                             )
                           ],
                         ),
@@ -70,46 +97,64 @@ class _HomeDetailState extends State<HomeDetail> {
                     ),
                     Expanded(
                       flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 50, 10, 5),
-                        alignment: AlignmentDirectional.center,
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            border: Border(
-                              top: BorderSide(color: Colors.white, width: 2),
-                              left: BorderSide(color: Colors.white, width: 2),
-                            )),
-                        child: Stack(
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                      child: Stack(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 50, 10, 5),
+                            alignment: AlignmentDirectional.center,
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border(
+                                  top: BorderSide(color: Colors.white, width: 2),
+                                  left: BorderSide(color: Colors.white, width: 2),
+                                )),
+                            child: Stack(
                               children: <Widget>[
-                                Container(
-                                  padding:EdgeInsets.only(bottom: 30),
-                                  child: Icon(
-                                    Icons.add_circle_outlined,
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                ),
-                                Text(
-                                  "",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "Tác vụ khác",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Container(
+                                      padding:EdgeInsets.only(bottom: 30),
+                                      child: Icon(
+                                        Icons.add_circle_outlined,
+                                        color: Colors.white,
+                                        size: 50,
+                                      ),
+                                    ),
+                                    Text(
+                                      "",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "Tác vụ khác",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                )
                               ],
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                          Padding(
+                            padding:  EdgeInsets.only(top: 5,left: 3),
+                            child: Container(
+                                padding: EdgeInsets.fromLTRB(2,5,2,5),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                                  border: Border.all(width: 1.3, color: Colors.white),
+                                ),
+                                child: Text("5",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ))),
+                          )
+                        ],
                       ),
                     ),
                     Expanded(

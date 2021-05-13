@@ -3,7 +3,8 @@ import 'dart:io';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
 import 'package:test_project/models/login_data.dart';
-import 'package:test_project/models/login_params.dart';
+import 'package:test_project/models/deployment_data.dart';
+import 'package:test_project/screen/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -56,6 +57,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 40, bottom: 20),
               child: TextField(
+                controller: TextEditingController(text: "00177292"),
                 style: TextStyle(fontSize: 18, color: Colors.black),
                 decoration: InputDecoration(
                     labelText: "USERNAME",
@@ -70,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 20),
                     child: TextField(
+                      controller: TextEditingController(text: "432403"),
                       style: TextStyle(fontSize: 18, color: Colors.black),
                       obscureText: _hidePW,
                       decoration: InputDecoration(
@@ -95,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: clickDemo,
+                onPressed: onNavigateHome,
                 style: ElevatedButton.styleFrom(
                     primary: Colors.blueAccent,
                     onPrimary: Colors.white,
@@ -146,7 +149,18 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+ void onNavigateHome() {
+
+
+  Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => HomePage()),
+  );
+  }
 }
+
+
+//data for repo
 
 clickDemo() {
   print("OK clickkk");
