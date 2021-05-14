@@ -1,10 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
+import 'package:background_location/background_location.dart';
 import "package:flutter/material.dart";
-import 'package:http/http.dart' as http;
-import 'package:test_project/models/login_data.dart';
-import 'package:test_project/models/deployment_data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_project/BloC/home_bloc.dart';
+import 'package:test_project/BloC/login_bloc.dart';
 import 'package:test_project/screen/home_page.dart';
+import 'package:test_project/utilities/ultils.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,20 +13,38 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+
+
+  }
+
+  @override
+  void dispose() {
+    setTimeOut();
+    super.dispose();
+    loginBloc.dispose();
+  }
+  setTimeOut() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("time_out",DateTime.now().toString());
+  }
+
   bool _hidePW = true;
+
   void tapShow() {
     setState(() {
       _hidePW = !_hidePW;
     });
   }
 
-  ScrollController _scrollController = new ScrollController(
-    initialScrollOffset: 0.0,
-    keepScrollOffset: true,
-  );
-
   @override
   Widget build(BuildContext context) {
+
+    final userController = TextEditingController(text: "00177292");
+    final passController = TextEditingController(text: "432403");
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(20, 150, 20, 0),
@@ -57,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 40, bottom: 20),
               child: TextField(
-                controller: TextEditingController(text: "00177292"),
+                controller: userController,
                 style: TextStyle(fontSize: 18, color: Colors.black),
                 decoration: InputDecoration(
                     labelText: "USERNAME",
@@ -72,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 20),
                     child: TextField(
-                      controller: TextEditingController(text: "432403"),
+                      controller: passController,
                       style: TextStyle(fontSize: 18, color: Colors.black),
                       obscureText: _hidePW,
                       decoration: InputDecoration(
@@ -98,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: onNavigateHome,
+                onPressed: ()=>{clickLogin(userController.text, passController.text)},
                 style: ElevatedButton.styleFrom(
                     primary: Colors.blueAccent,
                     onPrimary: Colors.white,
@@ -148,85 +167,37 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+
   }
- void onNavigateHome() {
 
+  clickLogin(String user,String pass) {
+    print("OK clickkk Login");
+    loginBloc.login(user, pass).then((value) => {
+      if(value){
+        onNavigateHome()
+      }else{
+        Fluttertoast.showToast(
+        msg: "Failed to Login",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.grey[400],
+        textColor: Colors.black,
+        fontSize: 16.0
+       )
+      }
+    });
 
-  Navigator.push(
-  context,
-  MaterialPageRoute(builder: (context) => HomePage()),
-  );
+  }
+
+  void onNavigateHome() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
   }
 }
-
 
 //data for repo
 
-clickDemo() {
-  print("OK clickkk");
-  final startTime = DateTime(2018, 6, 23, 12, 58);
-  final endTime = DateTime(2018, 6, 23, 13, 00);
-  print("ssss time "+endTime.difference(startTime).inHours.toString());
 
-  // getAccessToken();
-}
-
-Future<String> getAccessToken() async {
-  var url = Uri.https("sapi.fpt.vn", "/token/GenerateToken/Post");
-
-  var response = await http.get(url, headers: {
-    HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",
-    HttpHeaders.authorizationHeader:
-        "Basic dGhpZW50cTNfbmV3QGZwdC5jb20udm46MTIzNDU2"
-  });
-  String basicAuth = response.body.toString().replaceAll("\"", "");
-  postLoginToken(basicAuth);
-  return "";
-}
-
-Future<LoginData> postLoginToken(String basicAuth) async {
-  var params = {
-    "CodeEmloyee": "00177292",
-    "DeviceIMEI": "357625085532441",
-    "Password": "432403",
-    "TokenNoti":
-        "dIom-MNHSI-tjpV4048Itp:APA91bHVwh2qGaCHo5eZSoVPALhw9oak2qb-uL_T-Bmisb03EK1DM5bHIAO7LZoRuOWuhI9Egt6oBsilVpWoZFYEQ2XZ_sIY669y00nVYG7CuBjx6NO1i4P7_do-aposPX8sxIxghajW",
-    "Version": "6.10.0"
-  };
-  var url =
-      Uri.https("sapi.fpt.vn", "/su2-wsmobinetautostag/MobiNet_Login/POST");
-
-  var responsePost = await http.post(url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + basicAuth,
-      },
-      body: jsonEncode(params));
-  if (responsePost.statusCode == 200) {
-    Map<String, dynamic> userMap = jsonDecode(responsePost.body);
-    var loginData = LoginData.fromJson(userMap);
-    print("dataaa22222 " + responsePost.statusCode.toString());
-    print("dataaa22222 " + responsePost.body);
-    print("dataaa22222 " + loginData.message.accessToken.toString());
-    print("dataaa22222 " + loginData.message.result.userName.toString());
-  }
-
-
-  return null;
-}
-
-Future<http.Response> postDataDetail(
-    String basicAuth, String baererAuth, String FuntiongetData) async {
-  var params = {"Type": 0, "UserName": FuntiongetData};
-
-  var url = Uri.https(
-      "sapi.fpt.vn", "su2-wsmobinetautostag/MobiNet_GetListDepMain/POST");
-
-  var responsePost = await http.post(url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + basicAuth,
-        'AuthorizationX': 'bearer ' + baererAuth,
-      },
-      body: jsonEncode(params));
-}

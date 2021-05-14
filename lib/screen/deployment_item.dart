@@ -1,5 +1,7 @@
+import 'package:background_location/background_location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:test_project/models/deployment_data.dart';
 
 class DeploymentItem extends StatefulWidget {
@@ -12,6 +14,7 @@ class DeploymentItem extends StatefulWidget {
 }
 
 class _DeploymentItemState extends State<DeploymentItem> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -188,7 +191,7 @@ class _DeploymentItemState extends State<DeploymentItem> {
                                 child: Container(
                                   height: 45,
                                   decoration: BoxDecoration(
-                                      color: Colors.cyan,
+                                      color: Colors.cyanAccent,
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
                                   child: ElevatedButton(
@@ -208,12 +211,12 @@ class _DeploymentItemState extends State<DeploymentItem> {
                                 child: Container(
                                   height: 45,
                                   decoration: BoxDecoration(
-                                      color: Colors.cyan,
+                                      color: Colors.cyanAccent,
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
                                   padding: EdgeInsets.only(left: 2),
                                   child: ElevatedButton(
-                                    onPressed: null,
+                                    onPressed: tickHen,
                                     child: Text(
                                       "TÍCH HẸN",
                                       style: TextStyle(color: Colors.white),
@@ -259,6 +262,23 @@ class _DeploymentItemState extends State<DeploymentItem> {
 
   void checkIn(){
     print("Checkin button");
+    BackgroundLocation.getLocationUpdates((location) {
+      String locationStr = "Latitude: "+location.latitude.toString()+"\nLongitude: "+location.longitude.toString();
+      Fluttertoast.showToast(
+          msg: locationStr,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey[400],
+          textColor: Colors.black,
+          fontSize: 16.0
+      );
+
+    });
+
+  }
+  void tickHen(){
+    print("tickHen button");
 
   }
 }

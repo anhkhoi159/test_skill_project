@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_project/BloC/home_bloc.dart';
 
 import 'deployment_page.dart';
 import 'home_detail.dart';
@@ -12,12 +13,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool inDetailDeployment = false;
-  String _string = "Not set yet";
+  @override
+  void initState() {
+    super.initState();
+    homeBloc.getDeploymentData();
+
+  }
+
 
   // set string(String value) => setState(() => _string = value);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SafeArea(
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -100,4 +107,5 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 }
