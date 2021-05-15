@@ -12,5 +12,9 @@ class HomeBloc{
    var deploymentListData = homeRepository.fetchDeploymentList();
    return deploymentListData;
 }
+  dispose() {
+    _homeController.close();
+
+  }
 }
 final homeBloc = HomeBloc();

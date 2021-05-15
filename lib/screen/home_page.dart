@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_project/BloC/home_bloc.dart';
 
 import 'deployment_page.dart';
 import 'home_detail.dart';
@@ -16,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    homeBloc.getDeploymentData();
+    // homeBloc.getDeploymentData();
 
   }
 

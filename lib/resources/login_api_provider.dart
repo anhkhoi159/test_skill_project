@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_project/models/login_data.dart';
@@ -39,21 +38,21 @@ class LoginApiProvider {
       version: versionValue
     };
     final prefs = await SharedPreferences.getInstance();
-    checkAccessToken();
+    await checkAccessToken();
     String accessToken  = prefs.getString("access_token");
     var url = Uri.https(baseUrl, "/su2-wsmobinetautostag/MobiNet_Login/POST");
 
     var response = await http.post(url,
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: contentnType,
-          HttpHeaders.authorizationHeader: bearer + accessToken,
+          HttpHeaders.authorizationHeader: bearer + accessToken.toString(),
         },
         body: jsonEncode(bodyParams));
+    print("login_token"+response.body);
+    print("login_token"+accessToken.toString());
     if (response.statusCode == 200) {
       Map<String, dynamic> userMap = jsonDecode(response.body);
-      var loginData = LoginData.fromJson(userMap);
-      prefs.setString("login_token",loginData.message.accessToken);
-      return loginData;
+      return LoginData.fromJson(userMap);
     } else {
       throw Exception(failedLoginMessage);
     }

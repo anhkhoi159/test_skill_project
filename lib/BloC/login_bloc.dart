@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_project/models/login_data.dart';
 import 'package:test_project/resources/login_repository.dart';
@@ -17,21 +15,21 @@ class LoginBloC {
 
   getAccesstoken() async {
     var response = await loginRepository.fetchAccessToken();
-    print("get Access Token in BloC: "+response);
-
   }
 
   Future<bool> login(String username, String password) async {
     var response = await loginRepository.login(username, password);
     if (response.message.errorCode!=0){
       return false;
+    }else{
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("name", response.message.result.userName);
+      prefs.setBool("is_login", true);
+      prefs.setString("login_token",response.message.accessToken);
+      prefs.setString("time_out", DateTime.now().toString());
+      return true;
     }
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("name", response.message.result.userName);
-    prefs.setBool("is_login", true);
-    print("get Access Token in BloC: "+response.message.errorCode.toString());
 
-    return true;
 
     // _loginController.sink.add(response);
   }

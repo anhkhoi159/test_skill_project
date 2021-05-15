@@ -22,9 +22,9 @@ class DeploymentListData {
 }
 
 class DeploymentData {
-  String key;
+  int key;
   String userAct;
-  String iD;
+  int iD;
   int supType;
   int objID;
   String contract;
@@ -56,6 +56,7 @@ class DeploymentData {
   String amountAppointmentRed;
   int timeCheckOut;
   String loyalty;
+  int exchangeType;
 
   DeploymentData(
       {this.key,
@@ -91,7 +92,8 @@ class DeploymentData {
         this.amountAppointmentGreen,
         this.amountAppointmentRed,
         this.timeCheckOut,
-        this.loyalty});
+        this.loyalty,
+        this.exchangeType});
 
   DeploymentData.fromJson(Map<String, dynamic> json) {
     key = json['Key'];
@@ -128,6 +130,7 @@ class DeploymentData {
     amountAppointmentRed = json['AmountAppointmentRed'];
     timeCheckOut = json['TimeCheckOut'];
     loyalty = json['Loyalty'];
+    exchangeType = json['ExchangeType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -166,6 +169,7 @@ class DeploymentData {
     data['AmountAppointmentRed'] = this.amountAppointmentRed;
     data['TimeCheckOut'] = this.timeCheckOut;
     data['Loyalty'] = this.loyalty;
+    data['ExchangeType'] = this.exchangeType;
     return data;
   }
 }

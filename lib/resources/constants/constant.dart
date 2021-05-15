@@ -5,6 +5,7 @@ const String hostUrl = "https://sapi.fpt.vn";
 
 //params request
 const String bearer = "Bearer ";
+const String bearerX = "bearer ";
 const String contentnType = "application/json";
 const String authorizationX = "authorizationX";
 

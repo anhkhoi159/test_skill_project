@@ -1,11 +1,9 @@
-import 'package:background_location/background_location.dart';
 import "package:flutter/material.dart";
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_project/BloC/home_bloc.dart';
+
 import 'package:test_project/BloC/login_bloc.dart';
 import 'package:test_project/screen/home_page.dart';
-import 'package:test_project/utilities/ultils.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,14 +20,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    setTimeOut();
     super.dispose();
     loginBloc.dispose();
   }
-  setTimeOut() async{
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("time_out",DateTime.now().toString());
-  }
+
 
   bool _hidePW = true;
 

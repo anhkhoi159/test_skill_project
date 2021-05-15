@@ -2,6 +2,7 @@ import 'package:background_location/background_location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_project/models/deployment_data.dart';
 
 class DeploymentItem extends StatefulWidget {
@@ -14,7 +15,6 @@ class DeploymentItem extends StatefulWidget {
 }
 
 class _DeploymentItemState extends State<DeploymentItem> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,7 +41,7 @@ class _DeploymentItemState extends State<DeploymentItem> {
                   alignment: AlignmentDirectional.center,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(2)),
-                      border: Border.all(width: 1.3, color: Colors.cyan)),
+                      border: Border.all(width: 1.1, color: Colors.cyan[700])),
                   child: Text(
                     widget.data.supType == 1 ? "Triển khai" : "Bảo trì",
                     style: TextStyle(
@@ -58,23 +58,27 @@ class _DeploymentItemState extends State<DeploymentItem> {
                         height: 35,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(2)),
-                          border: Border.all(width: 1.3, color: Colors.cyan),
+                          border: Border.all(width: 1.1, color: Colors.cyan[700]),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Icon(widget.data.isReceive==0?Icons.check_box_outline_blank:Icons.check_box_outlined,
+                            Icon(
+                                widget.data.isReceive == 0
+                                    ? Icons.check_box_outline_blank
+                                    : Icons.check_box_outlined,
                                 color: Colors.black),
                             Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: Icon(Icons.phone, color: Colors.black),
                             ),
+                            widget.data.key==1?
                             Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: Icon(Icons.vpn_key_sharp,
                                   color: Colors.amber),
-                            ),
+                            ):Container(),
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
                               child: Icon(
@@ -124,7 +128,9 @@ class _DeploymentItemState extends State<DeploymentItem> {
                         isCountAppointment: true,
                         countAppointment: widget.data.amountAppointment,
                       ),
-                      BlueItem(title: "Múi giờ", value: widget.data.amountAppointmentGreen),
+                      BlueItem(
+                          title: "Múi giờ",
+                          value: widget.data.amountAppointmentGreen),
                       BlackItem(
                         title: "Loại KH:",
                         value: widget.data.typeCustomer,
@@ -191,11 +197,15 @@ class _DeploymentItemState extends State<DeploymentItem> {
                                 child: Container(
                                   height: 45,
                                   decoration: BoxDecoration(
-                                      color: Colors.cyanAccent,
+                                      color: Colors.cyan[700],
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
                                   child: ElevatedButton(
                                     onPressed: checkIn,
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.cyan[700],
+                                      onSurface: Colors.white
+                                    ),
                                     child: Text(
                                       "CHECK IN",
                                       style: TextStyle(color: Colors.white),
@@ -211,12 +221,16 @@ class _DeploymentItemState extends State<DeploymentItem> {
                                 child: Container(
                                   height: 45,
                                   decoration: BoxDecoration(
-                                      color: Colors.cyanAccent,
+                                      color: Colors.cyan[700],
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
                                   padding: EdgeInsets.only(left: 2),
                                   child: ElevatedButton(
                                     onPressed: tickHen,
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.cyan[700],
+                                        onSurface: Colors.white
+                                    ),
                                     child: Text(
                                       "TÍCH HẸN",
                                       style: TextStyle(color: Colors.white),
@@ -247,7 +261,11 @@ class _DeploymentItemState extends State<DeploymentItem> {
                                       ? Colors.red
                                       : null)),
                         ),
-                        Icon(Icons.run_circle_rounded, size: 40,color: Colors.lightGreenAccent[700],)
+                        Icon(
+                          Icons.run_circle_rounded,
+                          size: 40,
+                          color: Colors.lightGreenAccent[700],
+                        )
                       ],
                     ),
                   )
@@ -260,26 +278,30 @@ class _DeploymentItemState extends State<DeploymentItem> {
     );
   }
 
-  void checkIn(){
-    print("Checkin button");
-    BackgroundLocation.getLocationUpdates((location) {
-      String locationStr = "Latitude: "+location.latitude.toString()+"\nLongitude: "+location.longitude.toString();
-      Fluttertoast.showToast(
-          msg: locationStr,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey[400],
-          textColor: Colors.black,
-          fontSize: 16.0
-      );
-
+   void checkIn() async {
+    bool show = true;
+     BackgroundLocation.getLocationUpdates((location) {
+      print(location);
+      if (show) {
+        print(location.latitude.toString());
+        Fluttertoast.showToast(
+            msg: "Latitude: "+location.latitude.toString()+"\nLongitude: "+location.longitude.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[400],
+            textColor: Colors.black,
+            fontSize: 16.0);
+        show = false;
+      }
     });
 
   }
-  void tickHen(){
-    print("tickHen button");
 
+  Future<void> tickHen() async {
+    print("tickHen button");
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("is_login", false);
   }
 }
 
